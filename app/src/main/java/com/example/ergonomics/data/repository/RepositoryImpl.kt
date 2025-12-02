@@ -8,7 +8,7 @@ class RepositoryImpl(
 ): IRepository {
 
     override fun test() {
-        Log.d("BluetoothApp", "HELLO WORLD")
+        Log.d("ErgonomicsApp", "HELLO WORLD")
     }
 
 }

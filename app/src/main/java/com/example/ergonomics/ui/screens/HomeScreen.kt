@@ -53,8 +53,8 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.Center
             ){
                 Icon(
-                    painter = painterResource(R.drawable.bluetooth),
-                    contentDescription = "Bluetooth icon",
+                    painter = painterResource(R.drawable.ergonomics),
+                    contentDescription = "Ergonomics icon",
                     modifier = Modifier
                         .size(128.dp)
                         .padding(8.dp),
@@ -107,8 +107,8 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.bluetooth),
-                    contentDescription = "Bluetooth icon",
+                    painter = painterResource(R.drawable.ergonomics),
+                    contentDescription = "Ergonomics icon",
                     modifier = Modifier
                         .size(128.dp)
                         .padding(8.dp),
