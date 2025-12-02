@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -57,4 +59,32 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // Navigation (2.4.0 because I target API 33)
+    implementation("androidx.navigation:navigation-compose:2.9.6")
+
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.2.0")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+
+    //HILT
+    implementation("com.google.dagger:hilt-android:2.57.2")
+    kapt("com.google.dagger:hilt-android-compiler:2.57.2")
+    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
+
+    //HILT Tests
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.57.1")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.57.1")
+
+    // Optional for coroutines support
+    // implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+    testImplementation(kotlin("test"))
+
+    // Room
+    implementation("androidx.room:room-runtime:2.8.4")
+    implementation("androidx.room:room-ktx:2.8.4")
+    kapt("androidx.room:room-compiler:2.8.4")
 }
