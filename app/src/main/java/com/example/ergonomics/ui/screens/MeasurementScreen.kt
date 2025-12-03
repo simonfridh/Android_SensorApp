@@ -33,7 +33,7 @@ fun MeasurementScreen(
     val orientation = LocalConfiguration.current.orientation
 
     LaunchedEffect(Unit) {
-        //Place anything that needs to run when screen loads here
+        vm.startMeasurement()
     }
 
     //Portrait mode
@@ -59,8 +59,7 @@ fun MeasurementScreen(
                 verticalArrangement = Arrangement.Center
             ){
                 Button(
-                    enabled = false,
-                    onClick = { /* TODO add stop function from viewmodel */ }
+                    onClick = { vm.stopMeasurement() }
                 ) {
                     Text("STOP")
                 }
@@ -91,8 +90,7 @@ fun MeasurementScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Button(
-                    enabled = false,
-                    onClick = { /* TODO add stop function from viewmodel */ }
+                    onClick = { vm.stopMeasurement() }
                 ) {
                     Text("STOP")
                 }

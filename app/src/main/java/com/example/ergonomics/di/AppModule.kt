@@ -1,9 +1,7 @@
 package com.example.ergonomics.di
 
-import com.example.ergonomics.data.repository.RepositoryImpl
 import com.example.ergonomics.data.sensor.AccelerometerSensor
 import com.example.ergonomics.data.sensor.SensorRepositoryImpl
-import com.example.ergonomics.domain.repository.IRepository
 import com.example.ergonomics.domain.repository.ISensorRepository
 import dagger.Module
 import dagger.Provides
@@ -15,14 +13,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-
-    //IRepository
-    @Provides
-    @Singleton
-    fun provideRepository(): IRepository {
-        return RepositoryImpl()
-    }
-
     //ISensorRepository
     @Provides
     @Singleton
@@ -31,4 +21,5 @@ object AppModule {
             accelerometer = accelerometerSensor
         )
     }
+
 }

@@ -24,9 +24,7 @@ fun MeasurementData(
     ) {
         Text("Current measurement data:")
         Text("Accelerometer:\n" +
-                "x: ${sensorState.accelerometerValues.x}\n" +
-                "y: ${sensorState.accelerometerValues.y}\n" +
-                "z: ${sensorState.accelerometerValues.z}\n"
+                "angle: ${sensorState.angle}\n"
         )
 
     }
