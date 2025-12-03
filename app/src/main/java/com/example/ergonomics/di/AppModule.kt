@@ -31,7 +31,4 @@ object AppModule {
             accelerometer = accelerometerSensor
         )
     }
-
-
-
 }

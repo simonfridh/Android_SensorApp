@@ -23,7 +23,12 @@ fun MeasurementData(
         verticalArrangement = Arrangement.Center
     ) {
         Text("Current measurement data:")
-        Text("isDark: ${sensorState.isDark}")
+        Text("Accelerometer:\n" +
+                "x: ${sensorState.accelerometerValues.x}\n" +
+                "y: ${sensorState.accelerometerValues.y}\n" +
+                "z: ${sensorState.accelerometerValues.z}\n"
+        )
+
     }
 }
 

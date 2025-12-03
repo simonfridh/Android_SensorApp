@@ -14,23 +14,23 @@ class AccelerometerSensor(
     private var onValueChanged: ((x:Float, y:Float, z:Float) -> Unit)? = null
 
 
-    /** Can be used by viewmodel to set what function should be called when sensor updates */
+    // Can be used by viewmodel to set what function should be called when sensor updates
     fun setOnValuesChangedListener(listener: (x:Float, y:Float, z:Float) -> Unit) {
         onValueChanged = listener
     }
 
-    /** Checks if Sensor is available. Can be called from VM */
+    // Checks if Sensor is available. Can be called from VM
     fun isAvailable(): Boolean {
         return accelerometer != null
     }
 
-    /** Start listening to the sensor */
+    // Start listening to the sensor
     fun startListening() {
         if( !isAvailable() ) return
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
     }
 
-    /** Stop listening to the sensor */
+    // Stop listening to the sensor
     fun stopListening() {
         sensorManager.unregisterListener(this)
     }
