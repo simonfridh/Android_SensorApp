@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.ergonomics.data.sensor.MeasurableSensor
 import com.example.ergonomics.domain.repository.IRepository
+import com.example.ergonomics.domain.repository.ISensorRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,8 @@ interface IErgonomicsVM {
 @HiltViewModel
 class ErgonomicsVM @Inject constructor(
     private val lightSensor: MeasurableSensor,
-    private val repository: IRepository
+    private val repository: IRepository,
+    private val sensorRepository: ISensorRepository
 ): IErgonomicsVM,  ViewModel() {
     private val _sensorState = MutableStateFlow(SensorState())
     override val sensorState: StateFlow<SensorState>
