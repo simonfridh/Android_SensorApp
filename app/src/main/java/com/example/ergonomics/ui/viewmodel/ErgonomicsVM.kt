@@ -3,6 +3,7 @@ package com.example.ergonomics.ui.viewmodel
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.ergonomics.domain.models.SensorValues
 import com.example.ergonomics.domain.repository.ISensorRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -50,6 +51,8 @@ class ErgonomicsVM @Inject constructor(
         job = viewModelScope.launch {
             for(i in 0 until 30) { //30sec
                 delay(1000)
+
+
                 _sensorState.value = _sensorState.value.copy(angle = _accelerometerValues.value.y)
             }
         }
@@ -60,16 +63,8 @@ class ErgonomicsVM @Inject constructor(
     }
 }
 
-
-
 data class SensorState(
     val angle: Float = 0f
-)
-
-data class SensorValues(
-    val x: Float = 0f,
-    val y: Float = 0f,
-    val z: Float = 0f
 )
 
 
