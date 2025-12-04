@@ -32,12 +32,6 @@ class ErgonomicsVM @Inject constructor(
     private var _gyroscopeValues = mutableStateOf(SensorValues())
     private var job: Job? = null  // coroutine job for the measurement
 
-    init{
-        if(sensorRepository.sensorsAvailable()) {
-
-        }
-    }
-
     override fun startMeasurement() {
         stopMeasurement()
 
