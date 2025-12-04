@@ -12,7 +12,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -29,7 +28,7 @@ fun MeasurementScreen(
     vm: IErgonomicsVM,
     modifier: Modifier = Modifier
 ) {
-    val sensorState by vm.sensorState.collectAsState()
+    val measurementState by vm.measurementState.collectAsState()
     val orientation = LocalConfiguration.current.orientation
 
 
@@ -44,7 +43,7 @@ fun MeasurementScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
-                MeasurementData(sensorState = sensorState, modifier = modifier.padding(8.dp))
+                MeasurementData(measurementState = measurementState, modifier = modifier.padding(8.dp))
             }
 
             //BOTTOM HALF
@@ -56,6 +55,7 @@ fun MeasurementScreen(
                 verticalArrangement = Arrangement.Center
             ){
                 Button(
+                    enabled = measurementState.measurementRunning,
                     onClick = { vm.stopMeasurement() }
                 ) {
                     Text("STOP")
@@ -75,7 +75,7 @@ fun MeasurementScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                MeasurementData(sensorState = sensorState, modifier = modifier.padding(8.dp))
+                MeasurementData(measurementState = measurementState, modifier = modifier.padding(8.dp))
             }
 
             //RIGHT SIDE
@@ -87,6 +87,7 @@ fun MeasurementScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Button(
+                    enabled = measurementState.measurementRunning,
                     onClick = { vm.stopMeasurement() }
                 ) {
                     Text("STOP")
