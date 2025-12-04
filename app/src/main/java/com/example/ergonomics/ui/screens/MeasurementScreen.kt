@@ -32,9 +32,6 @@ fun MeasurementScreen(
     val sensorState by vm.sensorState.collectAsState()
     val orientation = LocalConfiguration.current.orientation
 
-    LaunchedEffect(Unit) {
-        vm.startMeasurement()
-    }
 
     //Portrait mode
     if(orientation == Configuration.ORIENTATION_PORTRAIT) {

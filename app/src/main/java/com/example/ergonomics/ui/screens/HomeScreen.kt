@@ -83,10 +83,8 @@ fun HomeScreen(
                 }
                 Button(
                     onClick = {
-                        navController.navigate("MeasurementScreen") {
-                            //Stops multiple pages from loading if pressing multiple times fast
-                            launchSingleTop = true
-                        }
+                        navController.navigate("MeasurementScreen") { launchSingleTop = true }
+                        vm.startMeasurement()
                     }
                 ) {
                     Text("START MEASUREMENT")
@@ -137,10 +135,8 @@ fun HomeScreen(
                 }
                 Button(
                     onClick = {
-                        navController.navigate("MeasurementScreen") {
-                            //Stops multiple pages from loading if pressing multiple times fast
-                            launchSingleTop = true
-                        }
+                        navController.navigate("MeasurementScreen") { launchSingleTop = true }
+                        vm.startMeasurement()
                     }
                 ) {
                     Text("START MEASUREMENT")

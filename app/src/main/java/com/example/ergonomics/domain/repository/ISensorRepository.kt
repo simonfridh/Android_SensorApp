@@ -9,6 +9,6 @@ interface ISensorRepository {
 
     fun setSensorsOnChange(
         accelerometerOnChange: (Float,Float,Float) -> Unit,
-        //TODO gyroscope on change
+        gyroscopeOnChange: (Float,Float,Float) -> Unit
     )
 }

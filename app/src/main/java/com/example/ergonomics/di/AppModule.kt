@@ -1,6 +1,7 @@
 package com.example.ergonomics.di
 
 import com.example.ergonomics.data.sensor.AccelerometerSensor
+import com.example.ergonomics.data.sensor.GyroscopeSensor
 import com.example.ergonomics.data.sensor.SensorRepositoryImpl
 import com.example.ergonomics.domain.repository.ISensorRepository
 import dagger.Module
@@ -16,9 +17,10 @@ object AppModule {
     //ISensorRepository
     @Provides
     @Singleton
-    fun provideSensorRepository(accelerometerSensor: AccelerometerSensor): ISensorRepository {
+    fun provideSensorRepository(accelerometerSensor: AccelerometerSensor, gyroscopeSensor: GyroscopeSensor): ISensorRepository {
         return SensorRepositoryImpl(
-            accelerometer = accelerometerSensor
+            accelerometer = accelerometerSensor,
+            gyroscope = gyroscopeSensor
         )
     }
 

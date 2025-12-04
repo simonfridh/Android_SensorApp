@@ -2,6 +2,7 @@ package com.example.ergonomics.di
 
 import android.app.Application
 import com.example.ergonomics.data.sensor.AccelerometerSensor
+import com.example.ergonomics.data.sensor.GyroscopeSensor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,5 +16,11 @@ object SensorModule {
     @Singleton
     fun provideAccelerometerSensor(app: Application): AccelerometerSensor {
         return AccelerometerSensor(app)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGyroscopeSensor(app: Application): GyroscopeSensor {
+        return GyroscopeSensor(app)
     }
 }

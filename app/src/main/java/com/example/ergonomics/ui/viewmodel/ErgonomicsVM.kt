@@ -34,37 +34,47 @@ class ErgonomicsVM @Inject constructor(
 
     init{
         if(sensorRepository.sensorsAvailable()) {
-            sensorRepository.startSensors()
 
-            sensorRepository.setSensorsOnChange (
-                accelerometerOnChange = { x, y, z ->
-                    _accelerometerValues.value = SensorValues(x,y,z)
-                }
-
-            )
         }
     }
 
     override fun startMeasurement() {
-        job?.cancel()  // Cancel any existing measurement
+        stopMeasurement()
 
+        if (sensorRepository.sensorsAvailable()) {
+            sensorRepository.startSensors()
+            sensorRepository.setSensorsOnChange (
+                accelerometerOnChange = { x, y, z ->
+                    _accelerometerValues.value = SensorValues(x,y,z)
+                },
+                gyroscopeOnChange = { x, y, z ->
+                    _gyroscopeValues.value = SensorValues(x,y,z)
+
+                }
+            )
+        }
+
+        //Start timed measurement
         job = viewModelScope.launch {
-            for(i in 0 until 30) { //30sec
-                delay(1000)
-
-
-                _sensorState.value = _sensorState.value.copy(angle = _accelerometerValues.value.y)
+            _sensorState.value = _sensorState.value.copy(measurementRunning = true)
+            for(i in 0 until 300) { //30sec
+                delay(100)
+                _sensorState.value = _sensorState.value.copy(currentAngle = _gyroscopeValues.value.y)
             }
+            stopMeasurement()
         }
     }
 
     override fun stopMeasurement() {
-        job?.cancel()  // Cancel any existing measurement
+        job?.cancel()
+        sensorRepository.stopSensors()
+        _sensorState.value = _sensorState.value.copy(measurementRunning = false)
     }
 }
 
 data class SensorState(
-    val angle: Float = 0f
+    val measurementRunning: Boolean = false,
+    val currentAngle: Float = 0f
 )
 
 
