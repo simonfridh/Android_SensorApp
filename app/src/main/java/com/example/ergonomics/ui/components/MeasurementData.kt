@@ -37,7 +37,7 @@ fun MeasurementData(
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "${measurementState.currentAngle}°",
+                text = "${"%.1f".format(measurementState.currentAngle)}°",
                 style = MaterialTheme.typography.displayMedium,
                 textAlign = TextAlign.Center
             )
@@ -57,7 +57,7 @@ fun MeasurementData(
             ) {
                 items(items = measurementState.measurementSummary) { item ->
                     Text(
-                        text = "A: ${item.angle}°, T: ${item.timestamp}s",
+                        text = "A: ${"%.1f".format(item.angle)}°, T: ${item.timestamp}s",
                         modifier = Modifier.padding(8.dp,4.dp)
                     )
                 }

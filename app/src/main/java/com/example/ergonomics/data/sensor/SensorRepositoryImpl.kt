@@ -23,7 +23,7 @@ class SensorRepositoryImpl @Inject constructor(
 
     override fun setSensorsOnChange(
         accelerometerOnChange: (Float, Float, Float) -> Unit,
-        gyroscopeOnChange: (Float, Float, Float) -> Unit
+        gyroscopeOnChange: (Float, Float, Float, Float) -> Unit
     ) {
         accelerometer.setOnValuesChangedListener(accelerometerOnChange)
         gyroscope.setOnValuesChangedListener(gyroscopeOnChange)

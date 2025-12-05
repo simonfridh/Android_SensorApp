@@ -5,12 +5,14 @@ import com.example.ergonomics.domain.models.SensorValue
 
 class GyroscopeAngle: IGyroscopeAngle {
 
-    override operator fun invoke(sensorValue: SensorValue, previousAngle: Float, timeInterval: Float): Float {
+    override operator fun invoke(sensorValue: SensorValue, previousAngle: Float, dt: Float): Float {
         val x = -sensorValue.x
 
-        val deltaDegrees = Math.toDegrees((x * timeInterval).toDouble())
-        val gyroscopeAngle = previousAngle + deltaDegrees
+        val deltaDegrees = Math.toDegrees((x * dt).toDouble())
+        val gyroscopeAngle = (previousAngle + deltaDegrees).toFloat()
 
-        return gyroscopeAngle.toFloat()
+        if (gyroscopeAngle > 180) return gyroscopeAngle - 360f
+        if (gyroscopeAngle < -180) return gyroscopeAngle + 360f
+        return gyroscopeAngle
     }
 }
