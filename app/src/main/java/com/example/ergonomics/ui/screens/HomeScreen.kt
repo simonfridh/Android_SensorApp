@@ -75,7 +75,7 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .weight(0.3f), //Uses 40% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top
+                verticalArrangement = Arrangement.Center
             ){
                 Button(
                     modifier = Modifier.size(150.dp),
