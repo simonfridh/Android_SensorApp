@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -49,7 +50,7 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.6f), //Uses 60% of remaining screen
+                    .weight(0.7f), //Uses 60% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
@@ -72,23 +73,22 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.4f), //Uses 40% of remaining screen
+                    .weight(0.3f), //Uses 40% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Top
             ){
                 Button(
-                    enabled = false,
-                    onClick = { }
-                ) {
-                    Text("Connect to Bluetooth Device")
-                }
-                Button(
+                    modifier = Modifier.size(150.dp),
+                    shape = CircleShape,
                     onClick = {
                         navController.navigate("MeasurementScreen") { launchSingleTop = true }
                         vm.startMeasurement()
                     }
                 ) {
-                    Text("START MEASUREMENT")
+                    Text(
+                        text = "START MEASUREMENT",
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }
@@ -129,18 +129,17 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Button(
-                    enabled = false,
-                    onClick = { }
-                ) {
-                    Text("Connect to Bluetooth Device")
-                }
-                Button(
+                    modifier = Modifier.size(150.dp),
+                    shape = CircleShape,
                     onClick = {
                         navController.navigate("MeasurementScreen") { launchSingleTop = true }
                         vm.startMeasurement()
                     }
                 ) {
-                    Text("START MEASUREMENT")
+                    Text(
+                        text = "START MEASUREMENT",
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }
