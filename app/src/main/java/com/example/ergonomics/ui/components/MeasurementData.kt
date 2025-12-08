@@ -44,6 +44,10 @@ fun MeasurementData(
         }
         else{
             //TODO replace with graph later. just a list showing all the values
+
+            AngleGraph(measurementState.measurementSummary)
+
+            /*
             Text(
                 text = "Measurement stopped \n" +
                         "Time: ${measurementState.totalTime}s",
@@ -61,7 +65,7 @@ fun MeasurementData(
                         modifier = Modifier.padding(8.dp,4.dp)
                     )
                 }
-            }
+            }*/
         }
     }
 }
