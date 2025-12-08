@@ -38,21 +38,31 @@ fun MeasurementData(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if(measurementState.measurementRunning) {
-            Text(
-                text = "Measurement running \n" +
-                        "Time: ${"%.2f".format(measurementState.totalTime)}s",
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
-            Text(
-                text = "${"%.1f".format(measurementState.currentAngle)}°",
-                style = MaterialTheme.typography.displayMedium,
-                textAlign = TextAlign.Center
-            )
+            Column(
+                modifier = Modifier.padding(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Measurement running \n" +
+                            "Time: ${"%.2f".format(measurementState.totalTime)}s",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = "${"%.1f".format(measurementState.currentAngle)}°",
+                    style = MaterialTheme.typography.displayMedium,
+                    textAlign = TextAlign.Center
+                )
+            }
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .border(width = 2.dp, color = MaterialTheme.colorScheme.primary)
+            ) {
+                AngleGraph(measurementState.measurementSummary)
+            }
         }
         else{
-            //TODO replace with graph later. just a list showing all the values
-
             Column(
                 modifier = Modifier.padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
