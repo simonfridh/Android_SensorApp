@@ -63,7 +63,7 @@ fun MeasurementData(
             ) {
                 Text(
                     text = "Measurement stopped \n" +
-                            "Time: ${measurementState.totalTime}s",
+                            "Time: ${"%.2f".format(measurementState.totalTime)}s",
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center
                 )
@@ -85,7 +85,7 @@ fun MeasurementData(
                     ) {
                         items(items = measurementState.measurementSummary) { item ->
                             Text(
-                                text = "A: ${"%.1f".format(item.angle)}°, T: ${item.timestamp}s",
+                                text = "${"%.2f".format(item.timestamp)}s: ${"%.1f".format(item.angle)}°",
                                 modifier = Modifier.padding(8.dp,4.dp)
                             )
                         }
