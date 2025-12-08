@@ -1,6 +1,5 @@
 package com.example.ergonomics.ui.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ergonomics.domain.models.Measurement
@@ -27,8 +26,8 @@ interface IErgonomicsVM {
 @HiltViewModel
 class ErgonomicsVM @Inject constructor(
     private val sensorRepository: ISensorRepository,
-    private val accelerometerAngle: IAccelerometerAngle,
-    private val gyroscopeAngle: IGyroscopeAngle,
+    private val calculateAccelerometerAngle: IAccelerometerAngle,
+    private val calculateGyroscopeAngle: IGyroscopeAngle,
     private val noiseFilter: INoiseFilter,
     private val sensorFusion: ISensorFusion
 ): IErgonomicsVM,  ViewModel() {
@@ -36,10 +35,12 @@ class ErgonomicsVM @Inject constructor(
     override val measurementState: StateFlow<MeasurementState>
         get() = _measurementState
 
-    private var _accelerometerValues = mutableStateOf(SensorValue())
-    private var _gyroscopeValues = mutableStateOf(SensorValue())
+    private var accelerometerAngle = 0f
+    private var gyroscopeAngle = 0f
+
+    private val _measurementTime = 30
     private var job: Job? = null  // coroutine job for the measurement
-    private val measurementTime = 30 //TODO hardcoded time in seconds
+
 
     override fun startMeasurement() {
         stopMeasurement()
@@ -50,19 +51,20 @@ class ErgonomicsVM @Inject constructor(
             sensorRepository.startSensors()
             sensorRepository.setSensorsOnChange (
                 accelerometerOnChange = { x, y, z ->
-                    _accelerometerValues.value = SensorValue(x,y,z)
+                    accelerometerAngle = calculateAccelerometerAngle(SensorValue(x,y,z))
                 },
-                gyroscopeOnChange = { x, y, z ->
-                    _gyroscopeValues.value = SensorValue(x,y,z)
-
+                gyroscopeOnChange = { x, y, z, dt ->
+                    gyroscopeAngle = calculateGyroscopeAngle(SensorValue(x,y,z),gyroscopeAngle, dt)
                 }
             )
         }
+
 
         //Start timed measurement
         job = viewModelScope.launch {
             //running = true
             _measurementState.value = _measurementState.value.copy(measurementRunning = true)
+            delay(300) //small delay to give sensors some time to start
             measurementLoop()
             stopMeasurement()
         }
@@ -76,30 +78,24 @@ class ErgonomicsVM @Inject constructor(
 
     private suspend fun measurementLoop() {
         //Setting some starting values for the n-1 values
-        var previousFilteredAngle = accelerometerAngle(_accelerometerValues.value)
-        var previousGyroscopeAngle = accelerometerAngle(_accelerometerValues.value)
+        var previousFilteredAngle = accelerometerAngle
+        gyroscopeAngle = accelerometerAngle
 
-        //one loop is 0.1sec
-        for(i in 0 until measurementTime * 10) {
-            delay(100)
-            val currentTime = (i+1).toFloat() / 10f //Current time in seconds
+        //one loop is 0.05sec
+        for(i in 0 until _measurementTime * 20) {
+            delay(50)
+            val currentTime = (i+1).toFloat() / 20f //Current time in seconds
 
             //Algorithm 1 - Linear Acceleration
-            val accelerometerAngle = accelerometerAngle(_accelerometerValues.value)
-            val filteredAngle = noiseFilter(0.8f, accelerometerAngle, previousFilteredAngle)
+            val filteredAngle = noiseFilter(0.5f, accelerometerAngle, previousFilteredAngle)
+            //Algorithm 2 - Sensor Fusion
+            val fusionAngle = sensorFusion(0.35f, filteredAngle, gyroscopeAngle)
 
-            //Algorithm 2 - Sensor Fusion TODO Funkar inte alls
-            //val gyroscopeAngle = gyroscopeAngle(_gyroscopeValues.value, previousGyroscopeAngle, 0.1f)
-            //val fusionAngle = sensorFusion(0.8f, filteredAngle, gyroscopeAngle)
-
-            //save values of n-1 for next loop
             previousFilteredAngle = filteredAngle
-            //previousGyroscopeAngle = gyroscopeAngle
-
             _measurementState.value = _measurementState.value.copy(
                 totalTime = currentTime,
-                currentAngle = filteredAngle,
-                measurementSummary = _measurementState.value.measurementSummary + Measurement(filteredAngle, currentTime)
+                currentAngle = fusionAngle,
+                measurementSummary = _measurementState.value.measurementSummary + Measurement(fusionAngle, currentTime)
             )
         }
     }

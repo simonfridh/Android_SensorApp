@@ -11,11 +11,12 @@ class GyroscopeSensor(
 ): SensorEventListener {
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val gyroscope: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-    private var onValueChanged: ((x:Float, y:Float, z:Float) -> Unit)? = null
+    private var onValueChanged: ((x:Float, y:Float, z:Float, dt: Float) -> Unit)? = null
+    private var lastTimeStamp: Long? = null
 
 
     // Can be used by viewmodel to set what function should be called when sensor updates
-    fun setOnValuesChangedListener(listener: (x:Float, y:Float, z:Float) -> Unit) {
+    fun setOnValuesChangedListener(listener: (x:Float, y:Float, z:Float, dt: Float) -> Unit) {
         onValueChanged = listener
     }
 
@@ -27,7 +28,7 @@ class GyroscopeSensor(
     // Start listening to the sensor
     fun startListening() {
         if( !isAvailable() ) return
-        sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_GAME)
     }
 
     // Stop listening to the sensor
@@ -40,11 +41,21 @@ class GyroscopeSensor(
     // This calls the function we send here from the viewmodel
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor?.type == Sensor.TYPE_GYROSCOPE) {
-            onValueChanged?.invoke(
-                event.values[0],
-                event.values[1],
-                event.values[2]
-            )
+            val last = lastTimeStamp //problem with using lastTimestamp because of multithreading
+            if (last == null) {
+                lastTimeStamp = event.timestamp
+                return
+            }
+            else {
+                val deltaSeconds = (event.timestamp - last) / 1_000_000_000f
+                onValueChanged?.invoke(
+                    event.values[0],
+                    event.values[1],
+                    event.values[2],
+                    deltaSeconds
+                )
+                lastTimeStamp = event.timestamp
+            }
         }
     }
 
