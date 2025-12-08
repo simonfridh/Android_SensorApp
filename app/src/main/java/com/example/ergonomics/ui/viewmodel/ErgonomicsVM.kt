@@ -81,15 +81,15 @@ class ErgonomicsVM @Inject constructor(
         var previousFilteredAngle = accelerometerAngle
         gyroscopeAngle = accelerometerAngle
 
-        //one loop is 0.1sec
-        for(i in 0 until _measurementTime * 10) {
-            delay(100)
-            val currentTime = (i+1).toFloat() / 10f //Current time in seconds
+        //one loop is 0.05sec
+        for(i in 0 until _measurementTime * 20) {
+            delay(50)
+            val currentTime = (i+1).toFloat() / 20f //Current time in seconds
 
             //Algorithm 1 - Linear Acceleration
             val filteredAngle = noiseFilter(0.9f, accelerometerAngle, previousFilteredAngle)
             //Algorithm 2 - Sensor Fusion
-            val fusionAngle = sensorFusion(0.95f, filteredAngle, gyroscopeAngle)
+            val fusionAngle = sensorFusion(0.5f, filteredAngle, gyroscopeAngle)
 
             previousFilteredAngle = filteredAngle
             _measurementState.value = _measurementState.value.copy(

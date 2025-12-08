@@ -32,7 +32,7 @@ fun MeasurementData(
         if(measurementState.measurementRunning) {
             Text(
                 text = "Measurement running \n" +
-                        "Time: ${measurementState.totalTime}s",
+                        "Time: ${"%.2f".format(measurementState.totalTime)}s",
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center
             )

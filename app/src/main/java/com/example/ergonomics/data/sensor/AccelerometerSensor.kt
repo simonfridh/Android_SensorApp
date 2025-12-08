@@ -27,7 +27,7 @@ class AccelerometerSensor(
     // Start listening to the sensor
     fun startListening() {
         if( !isAvailable() ) return
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME)
     }
 
     // Stop listening to the sensor

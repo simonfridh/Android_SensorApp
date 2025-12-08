@@ -11,7 +11,7 @@ class AccelerometerAngle: IAccelerometerAngle {
         val z = -sensorValue.z.toDouble()
 
         val angleRad = atan2(z,y)
-        val angleDegrees = Math.toDegrees(angleRad.toDouble()).toFloat()
+        val angleDegrees = Math.toDegrees(angleRad).toFloat()
 
         return angleDegrees
     }
