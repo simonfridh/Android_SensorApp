@@ -2,10 +2,12 @@ package com.example.ergonomics.ui.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -34,23 +36,29 @@ fun MeasurementScreen(
 
     //Portrait mode
     if(orientation == Configuration.ORIENTATION_PORTRAIT) {
-        Column(modifier = modifier.background(MaterialTheme.colorScheme.background)) {
+        Column(modifier = modifier.background(MaterialTheme.colorScheme.background)
+        ) {
             //TOP HALF
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.6f), //Uses 60% of remaining screen
+                    .weight(0.60f), //Uses 60% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
-                MeasurementData(measurementState = measurementState, modifier = modifier.padding(8.dp))
+                MeasurementData(
+                    measurementState = measurementState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
+                )
             }
 
             //BOTTOM HALF
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.4f), //Uses 40% of remaining screen
+                    .weight(0.40f), //Uses 40% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
@@ -69,18 +77,23 @@ fun MeasurementScreen(
         Row(modifier = modifier.background(MaterialTheme.colorScheme.background)) {
             //LEFT SIDE
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxHeight()
                     .weight(0.5f), //Uses 50% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                MeasurementData(measurementState = measurementState, modifier = modifier.padding(8.dp))
+                MeasurementData(
+                    measurementState = measurementState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
+                )
             }
 
             //RIGHT SIDE
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxHeight()
                     .weight(0.5f), //Uses 50% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,

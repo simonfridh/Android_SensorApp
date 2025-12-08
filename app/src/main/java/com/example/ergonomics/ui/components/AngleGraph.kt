@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
@@ -30,31 +31,26 @@ fun AngleGraph(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("Recorded Light Levels")
-        Spacer(modifier = Modifier.height(8.dp))
-
         Canvas(
             modifier = modifier
-                .fillMaxWidth()
-                .height(200.dp)
+                .fillMaxSize()
         ) {
+            if (values.isEmpty()) return@Canvas
 
-            // Sort by timestamp to ensure left→right plotting
-
+            // X-axis based on timestamps
             val minX = values.minOf { it.timestamp }
             val maxX = values.maxOf { it.timestamp }
-            val minY = values.minOf { it.angle }
-            val maxY = values.maxOf { it.angle }
-
             val xRange = maxX - minX
+
+            // FIXED Y-axis range
+            val minY = -180f
+            val maxY = 180f
             val yRange = maxY - minY
 
-            // Convert timestamp → X coordinate
             fun mapX(ts: Float): Float =
                 if (xRange == 0f) size.width / 2f
                 else ((ts - minX) / xRange) * size.width
 
-            // Convert angle → Y coordinate (inverted, because 0 is at top)
             fun mapY(angle: Float): Float =
                 size.height - ((angle - minY) / yRange) * size.height
 
@@ -62,7 +58,6 @@ fun AngleGraph(
                 Offset(mapX(m.timestamp), mapY(m.angle))
             }
 
-            // Draw line between points
             for (i in 0 until points.lastIndex) {
                 drawLine(
                     start = points[i],

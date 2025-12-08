@@ -2,6 +2,7 @@ package com.example.ergonomics.ui.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,7 +47,7 @@ fun HomeScreen(
         Column(modifier = modifier.background(MaterialTheme.colorScheme.background)) {
             //TOP HALF
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .weight(0.6f), //Uses 60% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -69,7 +70,7 @@ fun HomeScreen(
 
             //BOTTOM HALF
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .weight(0.4f), //Uses 40% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -98,7 +99,7 @@ fun HomeScreen(
         Row(modifier = modifier.background(MaterialTheme.colorScheme.background)) {
             //LEFT SIDE
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxHeight()
                     .weight(0.5f), //Uses 50% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -121,7 +122,7 @@ fun HomeScreen(
 
             //RIGHT SIDE
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxHeight()
                     .weight(0.5f), //Uses 50% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,

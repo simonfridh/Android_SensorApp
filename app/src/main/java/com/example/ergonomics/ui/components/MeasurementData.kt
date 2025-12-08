@@ -4,28 +4,40 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.ergonomics.ui.viewmodel.MeasurementState
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun MeasurementData(
     measurementState: MeasurementState,
     modifier: Modifier = Modifier
 ) {
+    var displayGraph by remember { mutableStateOf(true) }
+
     Column(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.background),
+        modifier = modifier.background(MaterialTheme.colorScheme.background),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -45,27 +57,41 @@ fun MeasurementData(
         else{
             //TODO replace with graph later. just a list showing all the values
 
-            AngleGraph(measurementState.measurementSummary)
-
-            /*
-            Text(
-                text = "Measurement stopped \n" +
-                        "Time: ${measurementState.totalTime}s",
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
-            LazyColumn(
-                modifier = Modifier
-                    .size(256.dp)
-                    .border(1.dp, MaterialTheme.colorScheme.primary)
+            Column(
+                modifier = Modifier.padding(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(items = measurementState.measurementSummary) { item ->
-                    Text(
-                        text = "A: ${"%.1f".format(item.angle)}°, T: ${item.timestamp}s",
-                        modifier = Modifier.padding(8.dp,4.dp)
-                    )
+                Text(
+                    text = "Measurement stopped \n" +
+                            "Time: ${measurementState.totalTime}s",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center
+                )
+                Button(
+                    onClick = { displayGraph = !displayGraph }
+                ) { Text("change mode") }
+            }
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .border(width = 2.dp, color = MaterialTheme.colorScheme.primary)
+            ) {
+                if(displayGraph) {
+                    AngleGraph(measurementState.measurementSummary)
                 }
-            }*/
+                else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        items(items = measurementState.measurementSummary) { item ->
+                            Text(
+                                text = "A: ${"%.1f".format(item.angle)}°, T: ${item.timestamp}s",
+                                modifier = Modifier.padding(8.dp,4.dp)
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -73,5 +99,5 @@ fun MeasurementData(
 @Preview
 @Composable
 private fun MeasurementDataPreview() {
-    MeasurementData(measurementState = MeasurementState(measurementRunning = true, currentAngle = 34f))
+    MeasurementData(measurementState = MeasurementState(measurementRunning = false, currentAngle = 34f))
 }
