@@ -64,6 +64,7 @@ class MainActivity : ComponentActivity() {
                         composable("ExportScreen") {
                             ExportScreen(
                                 vm = vm,
+                                navController = navController,
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }

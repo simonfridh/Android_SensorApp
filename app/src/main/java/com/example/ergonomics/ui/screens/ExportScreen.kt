@@ -24,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.ergonomics.ui.components.ExportTextField
 import com.example.ergonomics.ui.viewmodel.FakeVM
 import com.example.ergonomics.ui.viewmodel.IErgonomicsVM
@@ -31,6 +33,7 @@ import com.example.ergonomics.ui.viewmodel.IErgonomicsVM
 @Composable
 fun ExportScreen(
     vm: IErgonomicsVM,
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     val measurementState by vm.measurementState.collectAsState()
@@ -64,7 +67,10 @@ fun ExportScreen(
             ){
 
                 Button(
-                    onClick = { vm.exportData(fileNameState.value) },
+                    onClick = {
+                        vm.exportData(fileNameState.value)
+                        navController.popBackStack() //Go back
+                    },
                     enabled = !measurementState.measurementRunning,
                     modifier = Modifier
                         .width(256.dp)
@@ -111,11 +117,11 @@ fun ExportScreen(
 @Preview
 @Composable
 private fun PortraitPreview() {
-    ExportScreen(FakeVM())
+    ExportScreen(FakeVM(), rememberNavController())
 }
 
 @Preview(widthDp = 915, heightDp = 412)
 @Composable
 private fun LandscapePreview() {
-    ExportScreen(FakeVM())
+    ExportScreen(FakeVM(), rememberNavController())
 }
