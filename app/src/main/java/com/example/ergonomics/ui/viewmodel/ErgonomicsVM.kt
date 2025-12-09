@@ -9,6 +9,7 @@ import com.example.ergonomics.domain.math.interfaces.IAccelerometerAngle
 import com.example.ergonomics.domain.math.interfaces.IGyroscopeAngle
 import com.example.ergonomics.domain.math.interfaces.INoiseFilter
 import com.example.ergonomics.domain.math.interfaces.ISensorFusion
+import com.example.ergonomics.domain.repository.IFileExportRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -29,7 +30,8 @@ class ErgonomicsVM @Inject constructor(
     private val calculateAccelerometerAngle: IAccelerometerAngle,
     private val calculateGyroscopeAngle: IGyroscopeAngle,
     private val noiseFilter: INoiseFilter,
-    private val sensorFusion: ISensorFusion
+    private val sensorFusion: ISensorFusion,
+    private val fileExportRepository: IFileExportRepository
 ): IErgonomicsVM,  ViewModel() {
     private val _measurementState = MutableStateFlow(MeasurementState())
     override val measurementState: StateFlow<MeasurementState>
