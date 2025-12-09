@@ -51,7 +51,6 @@ fun ExportScreen(
 
             ){
                 ExportTextField(
-                    modifier = modifier,
                     fileNameState = fileNameState
                 )
             }

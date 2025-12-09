@@ -20,7 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ExportTextField(
-    modifier: Modifier = Modifier,
     fileNameState: MutableState<String>,
     label: String = "Enter file name"
 ){
