@@ -7,14 +7,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.ergonomics.ui.components.ExportTextField
 import com.example.ergonomics.ui.viewmodel.FakeVM
 import com.example.ergonomics.ui.viewmodel.IErgonomicsVM
 
@@ -25,7 +35,7 @@ fun ExportScreen(
 ) {
     val measurementState by vm.measurementState.collectAsState()
     val orientation = LocalConfiguration.current.orientation
-
+    val fileNameState = remember{ mutableStateOf("") }
 
     //Portrait mode
     if(orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -38,10 +48,13 @@ fun ExportScreen(
                     .weight(0.70f), //Uses 70% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
+
             ){
-
+                ExportTextField(
+                    modifier = modifier,
+                    fileNameState = fileNameState
+                )
             }
-
             //BOTTOM HALF
             Column(
                 modifier = Modifier
@@ -50,6 +63,18 @@ fun ExportScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
+
+                Button(
+                    onClick = { vm.exportData(fileNameState.value) },
+                    enabled = !measurementState.measurementRunning,
+                    modifier = Modifier
+                        .width(256.dp)
+                        .height(50.dp)
+                        .padding(bottom= 8.dp),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("EXPORT TO CSV")
+                }
 
             }
         }
@@ -66,7 +91,6 @@ fun ExportScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-
 
             }
 
