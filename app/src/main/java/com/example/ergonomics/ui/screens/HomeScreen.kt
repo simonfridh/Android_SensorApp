@@ -6,10 +6,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -38,10 +42,6 @@ fun HomeScreen(
 ) {
     val orientation = LocalConfiguration.current.orientation
 
-    LaunchedEffect(Unit) {
-        //Place anything that needs to run when screen loads here
-    }
-
     //Portrait mode
     if(orientation == Configuration.ORIENTATION_PORTRAIT) {
         Column(modifier = modifier.background(MaterialTheme.colorScheme.background)) {
@@ -49,7 +49,7 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.7f), //Uses 60% of remaining screen
+                    .weight(0.7f),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
@@ -72,13 +72,15 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.3f), //Uses 40% of remaining screen
+                    .weight(0.3f),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
                 Button(
-                    modifier = Modifier.size(150.dp),
-                    shape = CircleShape,
+                    modifier = Modifier
+                        .width(256.dp)
+                        .height(156.dp),
+                    shape = RoundedCornerShape(8.dp),
                     onClick = {
                         navController.navigate("MeasurementScreen") { launchSingleTop = true }
                         vm.startMeasurement()
@@ -100,7 +102,7 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(0.5f), //Uses 50% of remaining screen
+                    .weight(0.6f),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -123,13 +125,15 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(0.5f), //Uses 50% of remaining screen
+                    .weight(0.4f),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 Button(
-                    modifier = Modifier.size(150.dp),
-                    shape = CircleShape,
+                    modifier = Modifier
+                        .width(256.dp)
+                        .height(156.dp),
+                    shape = RoundedCornerShape(8.dp),
                     onClick = {
                         navController.navigate("MeasurementScreen") { launchSingleTop = true }
                         vm.startMeasurement()

@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.ergonomics.domain.models.Measurement
 import com.example.ergonomics.ui.viewmodel.FakeVM
 import com.example.ergonomics.ui.viewmodel.MeasurementState
 
@@ -30,59 +31,21 @@ fun MeasurementData(
     measurementState: MeasurementState,
     modifier: Modifier = Modifier
 ) {
-    var displayGraph by remember { mutableStateOf(true) }
-
     Column(
         modifier = modifier.background(MaterialTheme.colorScheme.background),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if(measurementState.measurementRunning) {
-            Column(
-                modifier = Modifier.padding(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Measurement running \n" +
-                            "Time: ${"%.2f".format(measurementState.totalTime)}s",
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    text = "${"%.1f".format(measurementState.currentAngle)}°",
-                    style = MaterialTheme.typography.displayMedium,
-                    textAlign = TextAlign.Center
-                )
-            }
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .border(width = 2.dp, color = MaterialTheme.colorScheme.primary)
-            ) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f)
+            .border(width = 3.dp, color = MaterialTheme.colorScheme.surfaceVariant)
+        ) {
+            if(measurementState.measurementRunning) {
                 AngleGraph(measurementState.measurementSummary)
             }
-        }
-        else{
-            Column(
-                modifier = Modifier.padding(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Measurement stopped \n" +
-                            "Time: ${"%.2f".format(measurementState.totalTime)}s",
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center
-                )
-                Button(
-                    onClick = { displayGraph = !displayGraph }
-                ) { Text("change mode") }
-            }
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .border(width = 2.dp, color = MaterialTheme.colorScheme.primary)
-            ) {
-                if(displayGraph) {
+            else{
+                if(measurementState.displayGraph) {
                     AngleGraph(measurementState.measurementSummary)
                 }
                 else {
@@ -105,5 +68,20 @@ fun MeasurementData(
 @Preview
 @Composable
 private fun MeasurementDataPreview() {
-    MeasurementData(FakeVM().measurementState.value)
+    MeasurementData(
+        MeasurementState(
+            measurementSummary = listOf(
+                Measurement(-180f,  0.05f),
+                Measurement(-180f,  0.10f),
+                Measurement(-90f,  0.15f),
+                Measurement(-90f,  0.20f),
+                Measurement(0f,  0.25f),
+                Measurement(0f,  0.30f),
+                Measurement(90f,  0.35f),
+                Measurement(90f,  0.40f),
+                Measurement(180f,  0.45f),
+                Measurement(180f,  0.50f)
+            )
+        )
+    )
 }

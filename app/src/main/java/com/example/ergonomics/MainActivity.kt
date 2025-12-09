@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.ergonomics.ui.components.TopBar
+import com.example.ergonomics.ui.screens.ExportScreen
 import com.example.ergonomics.ui.screens.HomeScreen
 import com.example.ergonomics.ui.screens.MeasurementScreen
 import com.example.ergonomics.ui.theme.ErgonomicsTheme
@@ -46,9 +47,7 @@ class MainActivity : ComponentActivity() {
                         popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(700)) },
                         popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(700)) }
                     ) {
-                        composable(
-                            route = "HomeScreen"
-                        ) {
+                        composable(route = "HomeScreen") {
                             HomeScreen(
                                 vm = vm,
                                 navController = navController,
@@ -57,6 +56,13 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("MeasurementScreen") {
                             MeasurementScreen(
+                                vm = vm,
+                                navController = navController,
+                                modifier = Modifier.padding(innerPadding)
+                            )
+                        }
+                        composable("ExportScreen") {
+                            ExportScreen(
                                 vm = vm,
                                 modifier = Modifier.padding(innerPadding)
                             )

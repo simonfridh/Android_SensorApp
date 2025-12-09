@@ -22,6 +22,7 @@ interface IErgonomicsVM {
     val measurementState: StateFlow<MeasurementState>
     fun startMeasurement()
     fun stopMeasurement()
+    fun changeDisplayGraph()
 }
 
 @HiltViewModel
@@ -101,10 +102,15 @@ class ErgonomicsVM @Inject constructor(
             )
         }
     }
+
+    override fun changeDisplayGraph() {
+        _measurementState.value = _measurementState.value.copy(displayGraph = !measurementState.value.displayGraph)
+    }
 }
 
 data class MeasurementState(
     val measurementRunning: Boolean = false,
+    val displayGraph: Boolean = true,
     val totalTime: Float = 0f,
     val currentAngle: Float = 0f,
     val measurementSummary: List<Measurement> = emptyList()
@@ -134,4 +140,5 @@ class FakeVM: IErgonomicsVM {
 
     override fun startMeasurement() {}
     override fun stopMeasurement() {}
+    override fun changeDisplayGraph() {}
 }

@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,13 +23,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.ergonomics.ui.components.MeasurementData
+import com.example.ergonomics.ui.components.MeasurementInfo
 import com.example.ergonomics.ui.viewmodel.FakeVM
 import com.example.ergonomics.ui.viewmodel.IErgonomicsVM
 
 @Composable
 fun MeasurementScreen(
     vm: IErgonomicsVM,
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     val measurementState by vm.measurementState.collectAsState()
@@ -41,10 +48,15 @@ fun MeasurementScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.70f), //Uses 60% of remaining screen
+                    .weight(0.70f),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
+                MeasurementInfo(
+                    measurementState = measurementState,
+                    onChangeDisplayMode = { vm.changeDisplayGraph() },
+                    modifier = Modifier.padding(8.dp)
+                )
                 MeasurementData(
                     measurementState = measurementState,
                     modifier = Modifier
@@ -57,13 +69,28 @@ fun MeasurementScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.30f), //Uses 40% of remaining screen
+                    .weight(0.30f),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
                 Button(
+                    enabled = !measurementState.measurementRunning,
+                    onClick = { navController.navigate("ExportScreen") { launchSingleTop = true } },
+                    modifier = Modifier
+                        .width(256.dp)
+                        .height(50.dp)
+                        .padding(bottom= 8.dp),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("EXPORT RESULT")
+                }
+                Button(
                     enabled = measurementState.measurementRunning,
-                    onClick = { vm.stopMeasurement() }
+                    onClick = { vm.stopMeasurement() },
+                    modifier = Modifier
+                        .width(256.dp)
+                        .height(100.dp),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("STOP")
                 }
@@ -78,7 +105,7 @@ fun MeasurementScreen(
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(0.70f), //Uses 50% of remaining screen
+                    .weight(0.70f),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -94,10 +121,15 @@ fun MeasurementScreen(
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(0.3f), //Uses 50% of remaining screen
+                    .weight(0.3f),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+                MeasurementInfo(
+                    measurementState = measurementState,
+                    onChangeDisplayMode = { vm.changeDisplayGraph() },
+                    modifier = Modifier.padding(8.dp)
+                )
                 Button(
                     enabled = measurementState.measurementRunning,
                     onClick = { vm.stopMeasurement() }
@@ -112,11 +144,11 @@ fun MeasurementScreen(
 @Preview
 @Composable
 private fun PortraitPreview() {
-    MeasurementScreen(FakeVM())
+    MeasurementScreen(FakeVM(), rememberNavController())
 }
 
 @Preview(widthDp = 915, heightDp = 412)
 @Composable
 private fun LandscapePreview() {
-    MeasurementScreen(FakeVM())
+    MeasurementScreen(FakeVM(), rememberNavController())
 }

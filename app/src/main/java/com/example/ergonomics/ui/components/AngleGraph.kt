@@ -27,7 +27,8 @@ fun AngleGraph(
     Row (
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.background)
+            .padding(2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if(values.isEmpty()){
@@ -42,15 +43,11 @@ fun AngleGraph(
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                Text("180")
                 Text("135")
                 Text("90")
                 Text("45")
                 Text("0")
                 Text("-45")
-                Text("-90")
-                Text("-135")
-                Text("-180")
             }
             Canvas(
                 modifier = modifier
@@ -60,13 +57,21 @@ fun AngleGraph(
                 val xMin = values.minOf {it.timestamp}
                 val xMax = values.maxOf { it.timestamp }
                 val xRange = xMax - xMin
-                val yRange = 360f
+
+                val yMin = -45f
+                val yMax = 135f
+                val yRange = yMax - yMin
 
                 val points = values.map { value ->
                     val x =  ((value.timestamp - xMin) / xRange) * size.width
-                    val y =  size.height - ((value.angle + 180f) / yRange) * size.height
-                    Offset(x,y)
+                    if (value.angle >= yMax) Offset(x, 1f)
+                    else if (value.angle <= yMin) Offset(x, size.height-1)
+                    else {
+                        val y =  size.height - ((value.angle - yMin) / yRange) * size.height
+                        Offset(x,y)
+                    }
                 }
+
 
                 for (i in 0 until points.size-1) {
                     drawLine(
