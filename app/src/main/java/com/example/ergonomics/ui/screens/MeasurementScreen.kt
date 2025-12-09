@@ -131,8 +131,23 @@ fun MeasurementScreen(
                     modifier = Modifier.padding(8.dp)
                 )
                 Button(
+                    enabled = !measurementState.measurementRunning,
+                    onClick = { navController.navigate("ExportScreen") { launchSingleTop = true } },
+                    modifier = Modifier
+                        .width(256.dp)
+                        .height(50.dp)
+                        .padding(bottom= 8.dp),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text("EXPORT RESULT")
+                }
+                Button(
                     enabled = measurementState.measurementRunning,
-                    onClick = { vm.stopMeasurement() }
+                    onClick = { vm.stopMeasurement() },
+                    modifier = Modifier
+                        .width(256.dp)
+                        .height(100.dp),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Text("STOP")
                 }
