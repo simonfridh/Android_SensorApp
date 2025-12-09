@@ -23,6 +23,7 @@ interface IErgonomicsVM {
     fun startMeasurement()
     fun stopMeasurement()
     fun changeDisplayGraph()
+    fun exportData(filename: String)
 }
 
 @HiltViewModel
@@ -40,14 +41,15 @@ class ErgonomicsVM @Inject constructor(
 
     private var accelerometerAngle = 0f
     private var gyroscopeAngle = 0f
-
     private val _measurementTime = 30
     private var job: Job? = null  // coroutine job for the measurement
+    private var filteredValuesList = mutableListOf<Measurement>() //Used to export algo1 values
 
 
     override fun startMeasurement() {
         stopMeasurement()
         _measurementState.value = _measurementState.value.copy(measurementSummary = emptyList())
+        filteredValuesList = mutableListOf()
 
         //Set up sensors before measurement
         if (sensorRepository.sensorsAvailable()) {
@@ -61,7 +63,6 @@ class ErgonomicsVM @Inject constructor(
                 }
             )
         }
-
 
         //Start timed measurement
         job = viewModelScope.launch {
@@ -91,20 +92,30 @@ class ErgonomicsVM @Inject constructor(
 
             //Algorithm 1 - Linear Acceleration
             val filteredAngle = noiseFilter(0.5f, accelerometerAngle, previousFilteredAngle)
+            previousFilteredAngle = filteredAngle
+
             //Algorithm 2 - Sensor Fusion
             val fusionAngle = sensorFusion(0.35f, filteredAngle, gyroscopeAngle)
 
-            previousFilteredAngle = filteredAngle
+            //Save values
             _measurementState.value = _measurementState.value.copy(
                 totalTime = currentTime,
                 currentAngle = fusionAngle,
                 measurementSummary = _measurementState.value.measurementSummary + Measurement(fusionAngle, currentTime)
             )
+            filteredValuesList.add(Measurement(filteredAngle,currentTime)) //Used for exporting algo 1
         }
     }
 
     override fun changeDisplayGraph() {
         _measurementState.value = _measurementState.value.copy(displayGraph = !measurementState.value.displayGraph)
+    }
+
+    override fun exportData(filename: String) {
+        viewModelScope.launch{
+            fileExportRepository.exportMeasurements(measurementState.value.measurementSummary, filename)
+            fileExportRepository.exportMeasurements(filteredValuesList, filename + "_algorithm1")
+        }
     }
 }
 
@@ -115,6 +126,13 @@ data class MeasurementState(
     val currentAngle: Float = 0f,
     val measurementSummary: List<Measurement> = emptyList()
 )
+
+
+
+
+
+
+
 
 
 
@@ -141,4 +159,5 @@ class FakeVM: IErgonomicsVM {
     override fun startMeasurement() {}
     override fun stopMeasurement() {}
     override fun changeDisplayGraph() {}
+    override fun exportData(filename: String) {}
 }
