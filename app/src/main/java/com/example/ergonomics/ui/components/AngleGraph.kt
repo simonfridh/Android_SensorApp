@@ -4,10 +4,10 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,47 +24,58 @@ fun AngleGraph(
     values: List<Measurement>,
     modifier: Modifier = Modifier
 ) {
-    Column(
+    Row (
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Canvas(
-            modifier = modifier
-                .fillMaxSize()
-        ) {
-            if (values.isEmpty()) return@Canvas
-
-            // X-axis based on timestamps
-            val minX = values.minOf { it.timestamp }
-            val maxX = values.maxOf { it.timestamp }
-            val xRange = maxX - minX
-
-            // FIXED Y-axis range
-            val minY = -180f
-            val maxY = 180f
-            val yRange = maxY - minY
-
-            fun mapX(ts: Float): Float =
-                if (xRange == 0f) size.width / 2f
-                else ((ts - minX) / xRange) * size.width
-
-            fun mapY(angle: Float): Float =
-                size.height - ((angle - minY) / yRange) * size.height
-
-            val points = values.map { m ->
-                Offset(mapX(m.timestamp), mapY(m.angle))
+        if(values.isEmpty()){
+            Text("No data to display")
+        }
+        else {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(horizontal = 2.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Text("180")
+                Text("135")
+                Text("90")
+                Text("45")
+                Text("0")
+                Text("-45")
+                Text("-90")
+                Text("-135")
+                Text("-180")
             }
+            Canvas(
+                modifier = modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+            ) {
+                val xMin = values.minOf {it.timestamp}
+                val xMax = values.maxOf { it.timestamp }
+                val xRange = xMax - xMin
+                val yRange = 360f
 
-            for (i in 0 until points.lastIndex) {
-                drawLine(
-                    start = points[i],
-                    end = points[i + 1],
-                    color = Color(0xFF2962FF),
-                    strokeWidth = 5f
-                )
+                val points = values.map { value ->
+                    val x =  ((value.timestamp - xMin) / xRange) * size.width
+                    val y =  size.height - ((value.angle + 180f) / yRange) * size.height
+                    Offset(x,y)
+                }
+
+                for (i in 0 until points.size-1) {
+                    drawLine(
+                        start = points[i],
+                        end = points[i + 1],
+                        color = Color(0xFFFF0000),
+                        strokeWidth = 5f
+                    )
+                }
             }
         }
     }
@@ -74,13 +85,15 @@ fun AngleGraph(
 @Composable
 private fun AngleGraphPreview() {
     AngleGraph(values=listOf(
-        Measurement(0f,  0f),
-        Measurement(10f,  0.05f),
-        Measurement(30f,  0.1f),
-        Measurement(67f,  0.15f),
-        Measurement(91f,  0.2f),
-        Measurement(50f,  0.25f),
-        Measurement(23f,  0.3f),
-        Measurement(13f,  0.35f)
+        Measurement(-180f,  0.05f),
+        Measurement(-180f,  0.10f),
+        Measurement(-90f,  0.15f),
+        Measurement(-90f,  0.20f),
+        Measurement(0f,  0.25f),
+        Measurement(0f,  0.30f),
+        Measurement(90f,  0.35f),
+        Measurement(90f,  0.40f),
+        Measurement(180f,  0.45f),
+        Measurement(180f,  0.50f),
     ))
 }

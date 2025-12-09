@@ -2,7 +2,6 @@ package com.example.ergonomics.ui.screens
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,7 +41,7 @@ fun MeasurementScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.60f), //Uses 60% of remaining screen
+                    .weight(0.70f), //Uses 60% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
@@ -58,7 +57,7 @@ fun MeasurementScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.40f), //Uses 40% of remaining screen
+                    .weight(0.30f), //Uses 40% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ){
@@ -79,7 +78,7 @@ fun MeasurementScreen(
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(0.5f), //Uses 50% of remaining screen
+                    .weight(0.70f), //Uses 50% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -95,7 +94,7 @@ fun MeasurementScreen(
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(0.5f), //Uses 50% of remaining screen
+                    .weight(0.3f), //Uses 50% of remaining screen
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {

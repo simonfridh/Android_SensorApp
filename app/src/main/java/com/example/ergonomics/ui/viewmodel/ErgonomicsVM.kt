@@ -113,7 +113,23 @@ data class MeasurementState(
 //Used for previews
 class FakeVM: IErgonomicsVM {
     override val measurementState: StateFlow<MeasurementState>
-        get() = MutableStateFlow(MeasurementState())
+        get() = MutableStateFlow(
+            MeasurementState(
+                measurementSummary = listOf(
+                    Measurement(-180f,  0.05f),
+                    Measurement(-180f,  0.10f),
+                    Measurement(-90f,  0.15f),
+                    Measurement(-90f,  0.20f),
+                    Measurement(0f,  0.25f),
+                    Measurement(0f,  0.30f),
+                    Measurement(90f,  0.35f),
+                    Measurement(90f,  0.40f),
+                    Measurement(180f,  0.45f),
+                    Measurement(180f,  0.50f),
+                )
+            )
+        )
+
     override fun startMeasurement() {}
     override fun stopMeasurement() {}
 }
