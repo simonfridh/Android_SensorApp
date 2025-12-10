@@ -39,11 +39,11 @@ class ErgonomicsVM @Inject constructor(
     override val measurementState: StateFlow<MeasurementState>
         get() = _measurementState
 
-    private var accelerometerAngle = 0f
-    private var gyroscopeAngle = 0f
+    private var filteredAccelerometerAngle = 0f
+    private var fusionAngle = 0f
     private val _measurementTime = 30
-    private var job: Job? = null  // coroutine job for the measurement
-    private var filteredValuesList = mutableListOf<Measurement>() //Used to export algo1 values
+    private var job: Job? = null  // coroutine for the measurement. Can be canceled
+    private var filteredValuesList = mutableListOf<Measurement>() // Used to export algo1 values
 
 
     override fun startMeasurement() {
@@ -51,24 +51,33 @@ class ErgonomicsVM @Inject constructor(
         _measurementState.value = _measurementState.value.copy(measurementSummary = emptyList())
         filteredValuesList = mutableListOf()
 
-        //Set up sensors before measurement
+        // Set up sensors before measurement
         if (sensorRepository.sensorsAvailable()) {
             sensorRepository.startSensors()
             sensorRepository.setSensorsOnChange (
                 accelerometerOnChange = { x, y, z ->
-                    accelerometerAngle = calculateAccelerometerAngle(SensorValue(x,y,z))
+                    // Algorithm 1 - Linear Acceleration
+                    filteredAccelerometerAngle = noiseFilter(
+                        alpha = 0.7f,
+                        currentAngle = calculateAccelerometerAngle(SensorValue(x,y,z)),
+                        previousFilteredAngle = filteredAccelerometerAngle)
                 },
                 gyroscopeOnChange = { x, y, z, dt ->
-                    gyroscopeAngle = calculateGyroscopeAngle(SensorValue(x,y,z),gyroscopeAngle, dt)
+                    // Algorithm 2 - Sensor Fusion
+                    fusionAngle = sensorFusion(
+                        alpha = 0.05f,
+                        accelerometerAngle = filteredAccelerometerAngle,
+                        calculateGyroscopeAngle(SensorValue(x,y,z),fusionAngle, dt)
+                    )
                 }
             )
         }
 
         //Start timed measurement
         job = viewModelScope.launch {
-            //running = true
             _measurementState.value = _measurementState.value.copy(measurementRunning = true)
-            delay(300) //small delay to give sensors some time to start
+            delay(100) // small delay to give sensors some time to start
+            fusionAngle = filteredAccelerometerAngle // start fusionValue at current accelerometerValue to speed up start
             measurementLoop()
             stopMeasurement()
         }
@@ -81,37 +90,32 @@ class ErgonomicsVM @Inject constructor(
     }
 
     private suspend fun measurementLoop() {
-        //Setting some starting values for the n-1 values
-        var previousFilteredAngle = accelerometerAngle
-        gyroscopeAngle = accelerometerAngle
-
-        //one loop is 0.05sec
+        // one loop is 0.05sec.
+        // sensors are a bit faster but we read their values at a set speed
         for(i in 0 until _measurementTime * 20) {
             delay(50)
             val currentTime = (i+1).toFloat() / 20f //Current time in seconds
 
-            //Algorithm 1 - Linear Acceleration
-            val filteredAngle = noiseFilter(0.5f, accelerometerAngle, previousFilteredAngle)
-            previousFilteredAngle = filteredAngle
-
-            //Algorithm 2 - Sensor Fusion
-            val fusionAngle = sensorFusion(0.35f, filteredAngle, gyroscopeAngle)
-
-            //Save values
+            // Read values from sensors and save them
             _measurementState.value = _measurementState.value.copy(
                 totalTime = currentTime,
                 currentAngle = fusionAngle,
                 measurementSummary = _measurementState.value.measurementSummary + Measurement(fusionAngle, currentTime)
             )
-            filteredValuesList.add(Measurement(filteredAngle,currentTime)) //Used for exporting algo 1
+
+            // Here we save the algorithm 1 values so we can show them in excel :D
+            filteredValuesList.add(Measurement(filteredAccelerometerAngle,currentTime))
         }
     }
 
+    //Shared between multiple components to show/hide the graph in the UI
     override fun changeDisplayGraph() {
         _measurementState.value = _measurementState.value.copy(displayGraph = !measurementState.value.displayGraph)
     }
 
     override fun exportData(filename: String) {
+        // Two files are created.
+        // Algorithm 2 values are stored in filename.csv, and Algorithm 1 values are stored in filename_algorithm1.csv
         viewModelScope.launch{
             fileExportRepository.exportMeasurements(measurementState.value.measurementSummary, filename)
             fileExportRepository.exportMeasurements(filteredValuesList, filename + "_algorithm1")

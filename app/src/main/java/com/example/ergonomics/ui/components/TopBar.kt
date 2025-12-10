@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +43,7 @@ fun TopBar(
                 modifier = Modifier
                     .padding(8.dp, 4.dp)
                     .fillMaxHeight(),
+                shape = RoundedCornerShape(8.dp),
                 onClick = {
                     navController.popBackStack() //Go back to home
                 }
