@@ -1,18 +1,13 @@
 package com.example.ergonomics.data.export
 
-import android.content.Context
 import android.os.Environment
 import com.example.ergonomics.domain.models.Measurement
 import com.example.ergonomics.domain.repository.IFileExportRepository
-import dagger.hilt.android.qualifiers.ApplicationContext
 import okio.IOException
 import java.io.File
 import java.io.FileOutputStream
-import javax.inject.Inject
 
-class FileExportRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context
-): IFileExportRepository{
+class FileExportRepositoryImpl(): IFileExportRepository {
 
     override suspend fun exportMeasurements(
         measurement: List<Measurement>,
