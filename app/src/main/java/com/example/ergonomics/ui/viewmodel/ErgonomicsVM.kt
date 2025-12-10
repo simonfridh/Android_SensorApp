@@ -65,7 +65,7 @@ class ErgonomicsVM @Inject constructor(
                 gyroscopeOnChange = { x, y, z, dt ->
                     // Algorithm 2 - Sensor Fusion
                     fusionAngle = sensorFusion(
-                        alpha = 0.1f,
+                        alpha = 0.05f,
                         accelerometerAngle = filteredAccelerometerAngle,
                         calculateGyroscopeAngle(SensorValue(x,y,z),fusionAngle, dt)
                     )
